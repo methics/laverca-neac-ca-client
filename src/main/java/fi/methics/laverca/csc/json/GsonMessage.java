@@ -14,7 +14,7 @@ import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import fi.methics.laverca.csc.CscException;
+import fi.methics.laverca.csc.NeacException;
 
 
 /**
@@ -72,7 +72,7 @@ public abstract class GsonMessage {
      * @param t     Output class
      * @return Resulting object
      * @throws IOException 
-     * @throws CscException
+     * @throws NeacException
      * @throws JsonSyntaxException if JSON cannot be parsed to given type
      * @see {@link Gson#fromJson(String, Class)}
      */
@@ -82,7 +82,7 @@ public abstract class GsonMessage {
         if (response.isSuccessful()) {
             return fromJson(response.body().string(), clazz);
         } else {
-            throw new CscException(response);
+            throw new NeacException(response);
         }
     }
     

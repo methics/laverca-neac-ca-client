@@ -1,41 +1,27 @@
-# Laverca CSC client
-Simple Java client for CSC v1.0.4.0 API
+# Laverca NEAC CA Client
+Simple Java client for the NEAC CA Signature API
 
-The project supports the following CSC API end points:
-- /info
-- /auth/login
-- /auth/revoke
-- /credentials/list
-- /credentials/info
-- /credentials/authorize
-- /signatures/signHash
+The project supports the following API end points:
+- /get_certificate
+- /sign
 
 # Example Usage
-Get CSC service info
-```java
-CscClient client = new CscClient.Builder().withBaseUrl(BASE_URL)
-                                          .build();
-CscInfoResp info = client.getInfo();
-```
-
-List credentials
+List certificates
 ```java
 CscClient client = new CscClient.Builder().withBaseUrl(BASE_URL)
                                           .withUsername(USERNAME)
                                           .withPassword(API_KEY)
                                           .build();
-client.authLogin();
-CscCredentialsListRes credentials = client.listCredentials();
+NeacGetCertResp certs = client.getCertificate("35847001001");          
 ```
 
 Sign a hash
 ```java
-CscClient client = new CscClient.Builder().withBaseUrl(BASE_URL)
-                                          .withUsername(USERNAME)
-                                          .withPassword(API_KEY)
-                                          .build();
-client.authLogin();
-CscCredentialsListRes credentials = client.listCredentials();
-CscSignHashResp          signhash = client.signHash(credentials.credentialIDs.get(0), Arrays.asList(SHA256_HASH), CscClient.RSA_WITH_SHA256);
-String                  signature = signHash.signatures.get(0);
+NeacCaClient client = new NeacCaClient.Builder().withBaseUrl(BASE_URL)                                           
+                                                .withSpId("ABC-SP")                                              
+                                                .withSpPassword("SecurePassword!")                               
+                                                .build();                                                        
+FileToSign file = new FileToSign("de020bd5b1b6aa9a7a4d0af3b89ef883378cc254fae49c8c509254bbb496f2e5", "test.pdf");
+NeacSignResp sigresp = client.sign("35847001001", file);                                                         
+String signature = sigresp.data.signed_files.get(0).signature_value;                                             
 ```

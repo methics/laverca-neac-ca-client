@@ -9,8 +9,8 @@ The project supports the following API end points:
 List certificates
 ```java
 CscClient client = new CscClient.Builder().withBaseUrl(BASE_URL)
-                                          .withUsername(USERNAME)
-                                          .withPassword(API_KEY)
+                                          .withSpId("ABC-SP")                                              
+                                          .withSpPassword("SecurePassword!")      
                                           .build();
 NeacGetCertResp certs = client.getCertificate("35847001001");          
 ```

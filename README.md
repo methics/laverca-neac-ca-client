@@ -8,10 +8,10 @@ The project supports the following API end points:
 # Example Usage
 List certificates
 ```java
-CscClient client = new CscClient.Builder().withBaseUrl(BASE_URL)
-                                          .withSpId("ABC-SP")                                              
-                                          .withSpPassword("SecurePassword!")      
-                                          .build();
+NeacCaClient client = new NeacCaClient.Builder().withBaseUrl(BASE_URL)
+                                                .withSpId("ABC-SP")                                              
+                                                .withSpPassword("SecurePassword!")      
+                                                .build();
 NeacGetCertResp certs = client.getCertificate("35847001001");          
 ```
 

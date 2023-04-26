@@ -1,4 +1,4 @@
-package fi.methics.laverca.csc;
+package fi.methics.laverca.neac;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -13,13 +13,13 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import fi.methics.laverca.csc.json.getcert.NeacGetCertReq;
-import fi.methics.laverca.csc.json.getcert.NeacGetCertResp;
-import fi.methics.laverca.csc.json.sign.NeacSignReq;
-import fi.methics.laverca.csc.json.sign.NeacSignReq.FileToSign;
-import fi.methics.laverca.csc.json.sign.NeacSignResp;
-import fi.methics.laverca.csc.util.AllTrustingHostnameVerifier;
-import fi.methics.laverca.csc.util.AllTrustingTrustManager;
+import fi.methics.laverca.neac.json.getcert.NeacGetCertReq;
+import fi.methics.laverca.neac.json.getcert.NeacGetCertResp;
+import fi.methics.laverca.neac.json.sign.NeacSignReq;
+import fi.methics.laverca.neac.json.sign.NeacSignReq.FileToSign;
+import fi.methics.laverca.neac.json.sign.NeacSignResp;
+import fi.methics.laverca.neac.util.AllTrustingHostnameVerifier;
+import fi.methics.laverca.neac.util.AllTrustingTrustManager;
 
 /**
  * NEAC CA API Client class. This is used to communicate with a CA.

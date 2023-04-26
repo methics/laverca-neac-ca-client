@@ -1,4 +1,4 @@
-package fi.methics.laverca.csc.json;
+package fi.methics.laverca.neac.json;
 
 import java.io.IOException;
 

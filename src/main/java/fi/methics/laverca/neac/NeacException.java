@@ -1,8 +1,8 @@
-package fi.methics.laverca.csc;
+package fi.methics.laverca.neac;
 
 import com.squareup.okhttp.Response;
 
-import fi.methics.laverca.csc.json.NeacErrorResp;
+import fi.methics.laverca.neac.json.NeacErrorResp;
 
 public class NeacException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package fi.methics.laverca.csc.json;
+package fi.methics.laverca.neac.json;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import fi.methics.laverca.csc.NeacException;
+import fi.methics.laverca.neac.NeacException;
 
 
 /**

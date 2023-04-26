@@ -2,11 +2,11 @@
 //  (c) Copyright 2003-2023 Methics Technologies Oy. All rights reserved. 
 //
 
-package fi.methics.laverca.csc.json.getcert;
+package fi.methics.laverca.neac.json.getcert;
 
 import com.google.gson.annotations.SerializedName;
 
-import fi.methics.laverca.csc.json.GsonMessage;
+import fi.methics.laverca.neac.json.GsonMessage;
 
 /**
  * <pre> 

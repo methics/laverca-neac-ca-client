@@ -1,4 +1,4 @@
-package fi.methics.laverca.csc.util;
+package fi.methics.laverca.neac.util;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;

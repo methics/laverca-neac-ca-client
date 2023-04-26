@@ -109,7 +109,7 @@ public class NeacCaClient {
         req.sp_id          = this.sp_id;
         req.sp_password    = this.sp_password;
         req.transaction_id = this.generateTransId();
-        req.time_stamp     = Instant.now().toString().replace("T", "").replace("-", "").replace(":", "");
+        req.time_stamp     = Instant.now().toString().replace("T", "").replace("-", "").replace(":", "").replace(".", "");
         req.user_id        = user_id;
         req.sign_files     = new ArrayList<>();
         

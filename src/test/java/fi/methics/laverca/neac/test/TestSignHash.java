@@ -1,4 +1,4 @@
-package fi.methics.laverca.csc.test;
+package fi.methics.laverca.neac.test;
 import java.util.Arrays;
 import java.util.List;
 

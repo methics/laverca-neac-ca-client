@@ -1,4 +1,4 @@
-package fi.methics.laverca.csc.test;
+package fi.methics.laverca.neac.test;
 
 public class TestGetCertificate {
 

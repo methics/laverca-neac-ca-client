@@ -1,5 +1,7 @@
 # Laverca NEAC CA Client
-Simple Java client for the NEAC CA Signature API
+Simple Java client for the [NEAC CA Signature API](https://thuvienphapluat.vn/van-ban/Cong-nghe-thong-tin/Quyet-dinh-769-QD-BTTTT-2022-ket-noi-voi-to-chuc-cung-cap-chung-thuc-chu-ky-so-cong-cong-511727.aspx)
+
+<img src="NEAC_flow.png" alt="Image" width="800" height="576">
 
 The project supports the following API end points:
 - /get_certificate

@@ -38,17 +38,18 @@ import fi.methics.laverca.neac.util.AllTrustingTrustManager;
  */
 public class NeacCaClient {
 
-    private String baseurl;
+    private String baseUrl;
+    private String secondaryUrl;
     private String sp_id;
     private String sp_password;
     
     private OkHttpClient client;
     
-    protected NeacCaClient(String baseurl, 
+    protected NeacCaClient(String baseUrl, 
                            String username, 
                            String password,
                            boolean trustall) {
-        this.baseurl  = baseurl;
+        this.baseUrl  = baseUrl;
         this.sp_id = username;
         this.sp_password = password;
         
@@ -64,7 +65,7 @@ public class NeacCaClient {
                 this.client.setSslSocketFactory(sslContext.getSocketFactory());
                 this.client.setHostnameVerifier(new AllTrustingHostnameVerifier());
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new NeacException(e);
             }
         }
     }
@@ -83,15 +84,11 @@ public class NeacCaClient {
         req.user_id        = user_id;
         
         try {
-            String url = this.baseurl+"/get_certificate";
-            Request  request  = new Request.Builder().url(url)
-                                                     .post(req.toRequestBody())
-                                                     .build();
-            
-            Response response = client.newCall(request).execute();
+            String service = "/get_certificate";
+            Request.Builder request = new Request.Builder().url(service) .post(req.toRequestBody());
+            Response response = sendRequest(request, service);
             return NeacGetCertResp.fromResponse(response, NeacGetCertResp.class);
         } catch (IOException e) {
-            e.printStackTrace();
             throw new NeacException(e);
         } catch (NeacException e) {
             throw e;
@@ -118,17 +115,37 @@ public class NeacCaClient {
         }
         
         try {
-            String url = this.baseurl+"/sign";
-            Request  request  = new Request.Builder().url(url)
-                                                     .post(req.toRequestBody())
-                                                     .build();
-            
-            Response response = client.newCall(request).execute();
+            String service = "/sign";
+            Request.Builder request = new Request.Builder().post(req.toRequestBody());
+            Response response = sendRequest(request, service);
             return NeacSignResp.fromResponse(response, NeacSignResp.class);
         } catch (IOException e) {
             e.printStackTrace();
             throw new NeacException(e);
         } catch (NeacException e) {
+            throw e;
+        }
+    }
+    
+    /**
+     * Send a request to primary URL.
+     * If the request fails, and secondary is defined, retry to secondary URL.
+     * @param reqBuilder Request Builder
+     * @param service    Service part of the URL (e.g. /neac/info)
+     * @return
+     * @throws IOException
+     */
+    private Response sendRequest(Request.Builder reqBuilder, String service) throws IOException {
+        try {
+            Request request   = reqBuilder.url(this.baseUrl+service).build();
+            Response response = client.newCall(request).execute();
+            return response;
+        } catch (IOException e) {
+            if (this.secondaryUrl != null) {
+                Request request   = reqBuilder.url(this.secondaryUrl+service).build();
+                Response response = client.newCall(request).execute();
+                return response;
+            }
             throw e;
         }
     }
@@ -142,19 +159,41 @@ public class NeacCaClient {
     }
     
     
+
     public static class Builder {
 
-        private String baseurl;
+        private String baseUrl;
+        private String secondaryUrl;
         private String sp_id;
         private String sp_password;
         private boolean trustall;
         
+        /**
+         * Build a new {@link NeacCaClient}
+         * @return CA client
+         * @throws NeacException if client building fails (e.g. TLS init issues)
+         */
         public NeacCaClient build() {
-            return new NeacCaClient(this.baseurl, this.sp_id, this.sp_password, this.trustall);
+            return new NeacCaClient(this.baseUrl, this.sp_id, this.sp_password, this.trustall);
         }
         
+        /**
+         * Set a primary CA URL
+         * @param secondaryUrl
+         * @return this builder
+         */
         public Builder withBaseUrl(String baseurl) {
-            this.baseurl = baseurl;
+            this.baseUrl = baseurl;
+            return this;
+        }
+        
+        /**
+         * Set a secondary CA URL (used if primary fails)
+         * @param secondaryUrl
+         * @return this builder
+         */
+        public Builder withSecondaryUrl(String secondaryUrl) {
+            this.secondaryUrl = secondaryUrl;
             return this;
         }
         

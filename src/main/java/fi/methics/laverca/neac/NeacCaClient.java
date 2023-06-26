@@ -140,13 +140,11 @@ public class NeacCaClient {
      */
     private Response sendRequest(Request.Builder reqBuilder, String service) throws IOException {
         try {
-            Request  request  = reqBuilder.url(this.baseUrl+service).build();
-            System.out.println("Sending to " + this.baseUrl+service);
+            Request request   = reqBuilder.url(this.baseUrl+service).build();
             Response response = client.newCall(request).execute();
             return response;
         } catch (IOException e) {
             if (this.secondaryUrl != null) {
-                System.out.println("Sending to " + this.secondaryUrl+service);
                 Request request   = reqBuilder.url(this.secondaryUrl+service).build();
                 Response response = client.newCall(request).execute();
                 return response;
@@ -162,8 +160,7 @@ public class NeacCaClient {
     private String generateTransId() {
         return UUID.randomUUID().toString();
     }
-    
-
+  
     public static class Builder {
 
         private String baseUrl;
@@ -178,7 +175,7 @@ public class NeacCaClient {
          * @throws NeacException if client building fails (e.g. TLS init issues)
          */
         public NeacCaClient build() {
-            return new NeacCaClient(this.baseUrl, this.secondaryUrl, this.sp_id, this.sp_password, this.trustall);
+            return new NeacCaClient(this.baseUrl, this.secondaryUrl, this.sp_id, this.sp_password, this.trustall)
         }
         
         /**

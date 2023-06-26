@@ -45,13 +45,16 @@ public class NeacCaClient {
     
     private OkHttpClient client;
     
-    protected NeacCaClient(String baseUrl, 
+    protected NeacCaClient(String baseUrl,
+                           String secondaryUrl,
                            String username, 
                            String password,
-                           boolean trustall) {
-        this.baseUrl  = baseUrl;
-        this.sp_id = username;
-        this.sp_password = password;
+                           boolean trustall)
+    {
+        this.baseUrl      = baseUrl;
+        this.secondaryUrl = secondaryUrl;
+        this.sp_id        = username;
+        this.sp_password  = password;
         
         this.client = new OkHttpClient();
         this.client.setConnectTimeout(60, TimeUnit.SECONDS);
@@ -85,7 +88,7 @@ public class NeacCaClient {
         
         try {
             String service = "/get_certificate";
-            Request.Builder request = new Request.Builder().url(service) .post(req.toRequestBody());
+            Request.Builder request = new Request.Builder().post(req.toRequestBody());
             Response response = sendRequest(request, service);
             return NeacGetCertResp.fromResponse(response, NeacGetCertResp.class);
         } catch (IOException e) {
@@ -137,11 +140,13 @@ public class NeacCaClient {
      */
     private Response sendRequest(Request.Builder reqBuilder, String service) throws IOException {
         try {
-            Request request   = reqBuilder.url(this.baseUrl+service).build();
+            Request  request  = reqBuilder.url(this.baseUrl+service).build();
+            System.out.println("Sending to " + this.baseUrl+service);
             Response response = client.newCall(request).execute();
             return response;
         } catch (IOException e) {
             if (this.secondaryUrl != null) {
+                System.out.println("Sending to " + this.secondaryUrl+service);
                 Request request   = reqBuilder.url(this.secondaryUrl+service).build();
                 Response response = client.newCall(request).execute();
                 return response;
@@ -158,7 +163,6 @@ public class NeacCaClient {
         return UUID.randomUUID().toString();
     }
     
-    
 
     public static class Builder {
 
@@ -174,7 +178,7 @@ public class NeacCaClient {
          * @throws NeacException if client building fails (e.g. TLS init issues)
          */
         public NeacCaClient build() {
-            return new NeacCaClient(this.baseUrl, this.sp_id, this.sp_password, this.trustall);
+            return new NeacCaClient(this.baseUrl, this.secondaryUrl, this.sp_id, this.sp_password, this.trustall);
         }
         
         /**

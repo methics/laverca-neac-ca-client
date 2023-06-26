@@ -1,173 +1,31 @@
 package fi.methics.laverca.neac.test;
-import java.util.Arrays;
-import java.util.List;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import fi.methics.laverca.neac.NeacCaClient;
+import fi.methics.laverca.neac.json.sign.NeacSignReq.FileToSign;
+import fi.methics.laverca.neac.json.sign.NeacSignResp;
 
 public class TestSignHash {
 
-    public static final List<String> SHA_1_HASH   = Arrays.asList("6SRQGxqJ372qx+kExRGCnXx8j08=");
-    public static final List<String> SHA_256_HASH = Arrays.asList("yT8dSBW55jBPpLP4qc72IQg1h8YWX8fKmsAx6B84Y4w=");
-    public static final List<String> SHA_384_HASH = Arrays.asList("YS/z/ZRgAExEwv4RIrytordiMWxI5Pzn+6MHOh5pHdo+Y5cllkTD1sbCrPLzXP8F");
-    public static final List<String> SHA_512_HASH = Arrays.asList("mQTi7vuAYupmdN3krOePaZR3FRbJN0KAnbUdTDiqa4bCPejblNKr9xZQwmClbAXl3jhFcUEkBkeT4flalmwYvw==");
+    public static final String SHA_256_HASH = "yT8dSBW55jBPpLP4qc72IQg1h8YWX8fKmsAx6B84Y4w=";
     
-    public static final List<String> MULTI_SHA_256_HASH = Arrays.asList("yT8dSBW55jBPpLP4qc72IQg1h8YWX8fKmsAx6B84Y4w=", "rNgt8E7HUwnm9NAZHXnTYrZbhUTE6z7r8bXFEMxtZeQ=");
-    public static final List<String> WRONG_SHA_256_HASH = Arrays.asList("oHGkSKNF/kVs5I7gZbg2cDVLzjrVUGUUmXyLw8KANnM=", "rNgt8E7HUwnm9NAZHXnTYrZbhUTE6z7r8bXFEMxtZeQ=");
+    /**
+     * Test signing a single hash with explicit authorize call
+     */
+    @Test
+    public void testSignHash() {
+        NeacCaClient client = new NeacCaClient.Builder().withBaseUrl(TestGetCertificate.BASE_URL)
+                                                  .withTrustInsecureConnections(true)
+                                                  .withSpId(TestGetCertificate.SP_ID)
+                                                  .withSpPassword(TestGetCertificate.SP_PASSWORD)
+                                                  .build();
 
-    ///**
-    // * Test signing a single hash with explicit authorize call
-    // */
-    //@Test
-    //public void testSignHash() {
-    //    NeacCaClient client = new NeacCaClient.Builder().withBaseUrl(TestGetCertificate.BASE_URL)
-    //                                              .withTrustInsecureConnections(true)
-    //                                              .withUsername(TestGetCertificate.USERNAME)
-    //                                              .withPassword(TestGetCertificate.API_KEY)
-    //                                              .build();
-    //    client.authLogin();
-    //    CscCredentialsListResp credentials = client.listCredentials();
-    //    Assertions.assertTrue(credentials.credentialIDs.size() > 0, "At least one credential was returned");
-    //
-    //    
-    //    CscCredentialsInfoResp info = client.getCredentialInfo(credentials.credentialIDs.get(0));
-    //    CscCredentialsAuthorizeResp authorize = null;
-    //    if (info.isScal2()) {
-    //        authorize = client.authorize(credentials.credentialIDs.get(0), SHA_256_HASH);
-    //    } else {
-    //        authorize = client.authorize(credentials.credentialIDs.get(0));
-    //    }
-    //    
-    //    CscSignHashResp signhash = client.signHash(credentials.credentialIDs.get(0), authorize, SHA_256_HASH, NeacCaClient.RSA_WITH_SHA256, null);
-    //    
-    //    Assertions.assertNotNull(signhash.signatures,       "signatures");
-    //    Assertions.assertNotNull(signhash.signatures.get(0), "signature");
-    //}
-    //
-    ///**
-    // * Test signing multiple SHA-256 hashes with explicit authorize call
-    // */
-    //@Test
-    //public void testSignMultipleHash() {
-    //    NeacCaClient client = new NeacCaClient.Builder().withBaseUrl(TestGetCertificate.BASE_URL)
-    //                                              .withTrustInsecureConnections(true)
-    //                                              .withUsername(TestGetCertificate.USERNAME)
-    //                                              .withPassword(TestGetCertificate.API_KEY)
-    //                                              .build();
-    //    client.authLogin();
-    //    CscCredentialsListResp    credentials = client.listCredentials();
-    //    Assertions.assertTrue(credentials.credentialIDs.size() > 0, "At least one credential was returned");
-    //
-    //    CscCredentialsAuthorizeResp authorize = client.authorize(credentials.credentialIDs.get(0), MULTI_SHA_256_HASH);
-    //    CscSignHashResp              signhash = client.signHash(credentials.credentialIDs.get(0), authorize, MULTI_SHA_256_HASH, NeacCaClient.RSA_WITH_SHA256, null);
-    //    
-    //    Assertions.assertNotNull(signhash.signatures,        "signatures");
-    //    Assertions.assertNotNull(signhash.signatures.get(0), "signature1");
-    //    Assertions.assertNotNull(signhash.signatures.get(1), "signature2");
-    //}
-    //
-    ///**
-    // * Test signing a single hash with explicit authorize call
-    // */
-    //@Test
-    //public void testSCAL2InvalidHash() {
-    //    NeacCaClient client = new NeacCaClient.Builder().withBaseUrl(TestGetCertificate.BASE_URL)
-    //                                              .withTrustInsecureConnections(true)
-    //                                              .withUsername(TestGetCertificate.USERNAME)
-    //                                              .withPassword(TestGetCertificate.API_KEY)
-    //                                              .build();
-    //    client.authLogin();
-    //    CscCredentialsListResp credentials = client.listCredentials();
-    //    Assertions.assertTrue(credentials.credentialIDs.size() > 0, "At least one credential was returned");
-    //
-    //    CscCredentialsInfoResp info = client.getCredentialInfo(credentials.credentialIDs.get(0));
-    //    if (!info.isScal2()) {
-    //        System.out.println("Credential is not SCAL2. Ignoring.");
-    //        return;
-    //    }
-    //    CscCredentialsAuthorizeResp authorize = client.authorize(credentials.credentialIDs.get(0), MULTI_SHA_256_HASH);
-    //    
-    //    NeacException exception = Assertions.assertThrows(NeacException.class, () -> {
-    //        client.signHash(credentials.credentialIDs.get(0), authorize, WRONG_SHA_256_HASH, NeacCaClient.RSA_WITH_SHA256, null);
-    //    });
-    //    Assertions.assertEquals(exception.getError().error, "invalid_request");
-    //}
-    //
-    ///**
-    // * Test signing a single SHA1 hash
-    // */
-    //@Test
-    //public void testSignSHA1Hash() {
-    //    NeacCaClient client = new NeacCaClient.Builder().withBaseUrl(TestGetCertificate.BASE_URL)
-    //                                              .withTrustInsecureConnections(true)
-    //                                              .withUsername(TestGetCertificate.USERNAME)
-    //                                              .withPassword(TestGetCertificate.API_KEY)
-    //                                              .build();
-    //    client.authLogin();
-    //    CscCredentialsListResp credentials = client.listCredentials();
-    //    Assertions.assertTrue(credentials.credentialIDs.size() > 0, "At least one credential was returned");
-    //
-    //    CscSignHashResp signhash = client.signHash(credentials.credentialIDs.get(0), SHA_1_HASH, NeacCaClient.RSA_WITH_SHA1);
-    //    
-    //    Assertions.assertNotNull(signhash.signatures,       "signatures");
-    //    Assertions.assertNotNull(signhash.signatures.get(0), "signature");
-    //}
-    //
-    ///**
-    // * Test signing a single SHA256 hash
-    // */
-    //@Test
-    //public void testSignSHA256Hash() {
-    //    NeacCaClient client = new NeacCaClient.Builder().withBaseUrl(TestGetCertificate.BASE_URL)
-    //                                              .withTrustInsecureConnections(true)
-    //                                              .withUsername(TestGetCertificate.USERNAME)
-    //                                              .withPassword(TestGetCertificate.API_KEY)
-    //                                              .build();
-    //    client.authLogin();
-    //    CscCredentialsListResp credentials = client.listCredentials();
-    //    Assertions.assertTrue(credentials.credentialIDs.size() > 0, "At least one credential was returned");
-    //
-    //    CscSignHashResp signhash = client.signHash(credentials.credentialIDs.get(0), SHA_256_HASH, NeacCaClient.RSA_WITH_SHA256);
-    //    
-    //    Assertions.assertNotNull(signhash.signatures,       "signatures");
-    //    Assertions.assertNotNull(signhash.signatures.get(0), "signature");
-    //}
-    //
-    ///**
-    // * Test signing a single SHA384 hash
-    // */
-    //@Test
-    //public void testSignSHA384Hash() {
-    //    NeacCaClient client = new NeacCaClient.Builder().withBaseUrl(TestGetCertificate.BASE_URL)
-    //                                              .withTrustInsecureConnections(true)
-    //                                              .withUsername(TestGetCertificate.USERNAME)
-    //                                              .withPassword(TestGetCertificate.API_KEY)
-    //                                              .build();
-    //    client.authLogin();
-    //    CscCredentialsListResp credentials = client.listCredentials();
-    //    Assertions.assertTrue(credentials.credentialIDs.size() > 0, "At least one credential was returned");
-    //
-    //    CscSignHashResp signhash = client.signHash(credentials.credentialIDs.get(0), SHA_384_HASH, NeacCaClient.RSA_WITH_SHA384);
-    //    
-    //    Assertions.assertNotNull(signhash.signatures,       "signatures");
-    //    Assertions.assertNotNull(signhash.signatures.get(0), "signature");
-    //}
-    //
-    ///**
-    // * Test signing a single SHA512 hash
-    // */
-    //@Test
-    //public void testSignSHA512Hash() {
-    //    NeacCaClient client = new NeacCaClient.Builder().withBaseUrl(TestGetCertificate.BASE_URL)
-    //                                              .withTrustInsecureConnections(true)
-    //                                              .withUsername(TestGetCertificate.USERNAME)
-    //                                              .withPassword(TestGetCertificate.API_KEY)
-    //                                              .build();
-    //    client.authLogin();
-    //    CscCredentialsListResp credentials = client.listCredentials();
-    //    Assertions.assertTrue(credentials.credentialIDs.size() > 0, "At least one credential was returned");
-    //    
-    //    CscSignHashResp signhash = client.signHash(credentials.credentialIDs.get(0), SHA_512_HASH, NeacCaClient.RSA_WITH_SHA512);
-    //    
-    //    Assertions.assertNotNull(signhash.signatures,       "signatures");
-    //    Assertions.assertNotNull(signhash.signatures.get(0), "signature");
-    //}
+        FileToSign dtbs = new FileToSign(SHA_256_HASH, "Test SHA256 hash");
+        NeacSignResp resp = client.sign(TestGetCertificate.USER_ID, dtbs);
+        
+        Assertions.assertNotNull(resp.data,    "Data");
+        Assertions.assertNotNull(resp.message, "Message");
+    }
     
 }

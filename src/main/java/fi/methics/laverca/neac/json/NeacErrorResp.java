@@ -16,6 +16,12 @@ import com.squareup.okhttp.ResponseBody;
  */
 public class NeacErrorResp extends GsonMessage {
     
+    public static final Integer SUCCESS             = Integer.valueOf(200);
+    public static final Integer INVALID_DOCUMENT    = Integer.valueOf(400);
+    public static final Integer INVALID_CREDENTIALS = Integer.valueOf(401);
+    public static final Integer CERTIFICATE_REVOKED = Integer.valueOf(403);
+    public static final Integer SYSTEM_ERROR        = Integer.valueOf(500);
+    
     @SerializedName("code")
     public Integer code;
     
@@ -24,14 +30,13 @@ public class NeacErrorResp extends GsonMessage {
     
     public NeacErrorResp() {}
     public NeacErrorResp(Integer code, String message) {
-        this.code = code;
+        this.code    = code;
         this.message = message;
     }
     
     public static NeacErrorResp fromResponse(final Response response) throws IOException {
         if (response == null) return null;
         try (ResponseBody body = response.body()) {
-            System.out.println(response.code() + ": " + response.message());
             String json = body.string();
             return fromJson(json, NeacErrorResp.class);
         } catch (Exception e) {

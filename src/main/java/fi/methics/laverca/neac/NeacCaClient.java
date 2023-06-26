@@ -123,7 +123,6 @@ public class NeacCaClient {
             Response response = sendRequest(request, service);
             return NeacSignResp.fromResponse(response, NeacSignResp.class);
         } catch (IOException e) {
-            e.printStackTrace();
             throw new NeacException(e);
         } catch (NeacException e) {
             throw e;
@@ -175,7 +174,7 @@ public class NeacCaClient {
          * @throws NeacException if client building fails (e.g. TLS init issues)
          */
         public NeacCaClient build() {
-            return new NeacCaClient(this.baseUrl, this.secondaryUrl, this.sp_id, this.sp_password, this.trustall)
+            return new NeacCaClient(this.baseUrl, this.secondaryUrl, this.sp_id, this.sp_password, this.trustall);
         }
         
         /**
